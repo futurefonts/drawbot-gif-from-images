@@ -2,18 +2,16 @@ import sys
 import os
 from datetime import datetime
 
-# Path to folder of images
-# This add all images to the animation, in alphabetical order
+
 
 docWidth=2046
 docHeight=3634
 
-srcPath = "./src/A" # change this to point to your directory of images
+srcPath = "./src/A" # path to folder with images
 saveFormats = ['gif','mp4'] # use gif and/or mp4
 
-framesPerSecond = 2 # lower will go slower, 30 is typical smooth animation
-defaultFrameDuration = 1 / framesPerSecond
-repeat = 1
+defaultFrameDuration = 0.5 # in seconds
+repeat = 1 # how many times to loop (will result in larger file)
 
 
 fileName = srcPath.split('/')[-1]
