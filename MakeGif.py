@@ -10,15 +10,29 @@ docHeight=1920
 srcPath = "./src/stop-motion-1" # path to folder with images
 saveFormats = ['gif','mp4'] # use gif and/or mp4
 
-defaultFrameDuration = 0.5 # in seconds
+fps = 30 # frames per second
+
+duration = {
+    'mode': 'fpb',
+    'value': 14
+}
+# duration mode options: 
+# 'fpb' (frames per beat)
+# 'bpm' (beats per minute)
+# 'hard' (duration in seconds)
+
 repeat = 1 # how many times to loop (will result in larger file)
 
+docColor = (0,0,0,1) # (r,g,b,a). Make a=0 for transparent
 
 fileName = srcPath.split('/')[-1]
 exportPath = "./exports/"
 
 saveEnabled = True  
 
+
+# global variable initializations
+defaultFrameDuration = None
 
 def main():
     setup()
@@ -33,6 +47,7 @@ def main():
 
     print('Done')
 def setup():
+    setDuration()
     newDrawing()
 
 def drawFrames():
@@ -79,5 +94,41 @@ def getTimestamp():
     now = datetime.now()
     formatted_datetime = now.strftime("%y%m%d%H%M")
     return formatted_datetime
+    
+def setDuration():
+    global defaultFrameDuration
+    if duration['mode'] == 'fpb':
+        defaultFrameDuration = calcDurationFromFpb(fps, duration['value'])
+    elif duration['mode'] == 'bpm':
+        defaultFrameDuration = calcDurationFromBpm(fps, duration['value'])
+    else:
+        defaultFrameDuration = duration['value']
+        print('Duration hard coded')
+        print('frameDuration', defaultFrameDuration)
+    
+def calcDurationFromFpb(fps,fpb):
+    # frames per beat 15=120bpm / 14=128.57bpm
+    bps = (fps/fpb) # beats per second
+    bpm = bps * 60 # beats per minute
+    duration = fpb / fps
+    print('Duration derived from FPB')
+    print('bpm:', bpm)
+    print('bps:', bps)
+    print('fps:', fps)
+    print('fpb:', fpb)
+    print('frameDuration:',  duration)
+    return duration
+
+def calcDurationFromBpm(fps,bpm):
+    bps = bpm / 60 # beats per second
+    fpb = fps / bps
+    duration = fpb / fps
+    print('Duration derived from BPM')
+    print('bpm:', bpm)
+    print('bps:', bps)
+    print('fps:', fps)
+    print('fpb:', fpb)
+    print('frameDuration:',  duration)
+    return duration
     
 main()
